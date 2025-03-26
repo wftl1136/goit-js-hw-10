@@ -1,168 +1,134 @@
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
+import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'flatpickr/dist/themes/material_blue.css';
 
-const images = [
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820__480.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2019/05/14/16/43/rchids-4202820_1280.jpg',
-    description: 'Hokkaido Flower',
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2019/05/14/22/05/container-4203677__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2019/05/14/22/05/container-4203677_1280.jpg',
-    description: 'Container Haulage Freight',
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2019/05/16/09/47/beach-4206785__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2019/05/16/09/47/beach-4206785_1280.jpg',
-    description: 'Aerial Beach View',
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2016/11/18/16/19/flowers-1835619__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2016/11/18/16/19/flowers-1835619_1280.jpg',
-    description: 'Flower Blooms',
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2018/09/13/10/36/mountains-3674334__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2018/09/13/10/36/mountains-3674334_1280.jpg',
-    description: 'Alpine Mountains',
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2019/05/16/23/04/landscape-4208571__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2019/05/16/23/04/landscape-4208571_1280.jpg',
-    description: 'Mountain Lake Sailing',
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2019/05/17/09/27/the-alps-4209272__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2019/05/17/09/27/the-alps-4209272_1280.jpg',
-    description: 'Alpine Spring Meadows',
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2019/05/16/21/10/landscape-4208255__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2019/05/16/21/10/landscape-4208255_1280.jpg',
-    description: 'Nature Landscape',
-  },
-  {
-    preview:
-      'https://cdn.pixabay.com/photo/2019/05/17/04/35/lighthouse-4208843__340.jpg',
-    original:
-      'https://cdn.pixabay.com/photo/2019/05/17/04/35/lighthouse-4208843_1280.jpg',
-    description: 'Lighthouse Coast Sea',
-  },
-];
+import iziToast from "izitoast";
+import "izitoast/dist/css/iziToast.min.css";
+import iconError from '../img/error.svg';
+import iconHello from '../img/hello.svg';
 
-//створюємо елементи галереї і вставляємо їх в розмітку нашої сторінки
-const gallery = document.querySelector('.gallery');
-const galleryItems = images.map(({ preview, original, description }) => {
-  return `<li class="gallery-item">
-  <a class="gallery-link" href="${original}">
-    <img
-      class="gallery-image"
-      src="${preview}"
-      alt="${description}"
-    />
-  </a>
-</li>`
-}).join('');
+let userSelectedDate;
+let interval;
+let newInterval;
+const timer = document.querySelector('.timer');
+const startButton = document.querySelector('button[data-start]');
+const inputData = document.getElementById('datetime-picker');
+const day = document.querySelector('span[data-days]');
+const hour = document.querySelector('span[data-hours]');
+const minute = document.querySelector('span[data-minutes]');
+const second = document.querySelector('span[data-seconds]');
 
-gallery.innerHTML = galleryItems;
+setTimeout(() => {
+  iziToast.show({
+    title: 'Hello',
+    message: 'Welcome to Timer!',
+    titleColor: '#FFFFFF',
+    messageColor: '#FFFFFF',
+    position: 'bottomRight',
+    backgroundColor: '#0099FF',
+    iconUrl: iconHello,
+  });
+}, 1000);
 
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+  onClose(selectedDates) {
+    userSelectedDate = selectedDates[0];
+    if (userSelectedDate && userSelectedDate <= new Date()) {
+      startButton.setAttribute('disabled', 'true');
 
-// Підключення галереї simpleLightbox;
-const simpleLightbox = new SimpleLightbox('.gallery a', {
-    captionsData: 'alt',
-    captionPosition: 'bottom',
-    captionDelay: 250,
+      iziToast.show({
+        title: 'Error!',
+        message: 'Please choose a date in the future',
+        titleColor: '#FFFFFF',
+        messageColor: '#FFFFFF',
+        position: 'topRight',
+        backgroundColor: '#EF4040',
+        position: 'topRight',
+        iconUrl: iconError,
+      });
+    } else {
+      startButton.removeAttribute('disabled');
+    }
+  },
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  flatpickr('#datetime-picker', options);
 });
 
-//Додаємо підримку додаткових клавіш для навігації(хто для яких привик 😀)
-document.addEventListener('keydown', navigationSimple);
+startButton.addEventListener('click', dataTimer);
 
-const isLightboxOpen = document.querySelector('.sl-lightbox.is-open');
-let activeIndex = 0;
-const galleryArray = Array.from(document.querySelectorAll('.gallery-item'));
+function dataTimer() {
+  if (!userSelectedDate) {
+    return;
+  }
+  inputData.disabled = true;
+  const currentDate = new Date();
+  let differenceData = userSelectedDate - currentDate;
+  startButton.setAttribute('disabled', 'true');
 
-function navigationSimple(event) {
-    console.log("🚀 ~ simpleLightbox.isOpen ~ simpleLightbox.isOpen:", simpleLightbox.isOpen)
-    
-    if (event.key === '5' || event.key === ' ' || event.key === 's' || event.key === 'S' || event.key === 'Enter') {
-        event.preventDefault();
-        if (simpleLightbox.isOpen) {
-            simpleLightbox.close()
-        } else {
-            const activeItem = galleryArray[activeIndex];
-            const link = activeItem.querySelector('.gallery-link');
-            simpleLightbox.open(link);
-        }
-    } else if ((event.key === 'ArrowLeft' || event.key === 'A' || event.key === 'a' || event.key === '4' || event.key === "numpad4")) {
-        if (simpleLightbox.isOpen) {
-            if (event.key === 'ArrowLeft') {
-                return;
-            } else {
-                simpleLightbox.prev();
-            }
-        } else {
-            activeIndex = (activeIndex > 0) ? activeIndex - 1 : galleryArray.length - 1;
-            updateActiveImg(activeIndex);
-        }
-    } else if ((event.key === 'ArrowRight' || event.key === 'D' || event.key === 'd' || event.key === '6' || event.key === "numpad6")) {
-        if (simpleLightbox.isOpen) {
-            if (event.key === 'ArrowRight') {
-                return;
-            } else {
-                simpleLightbox.next();
-            }
-        } else {
-            activeIndex = (activeIndex < galleryArray.length - 1) ? activeIndex + 1 : 0;
-            console.log("🚀 ~ navigationGallery ~ activeIndex:", activeIndex)
-            updateActiveImg(activeIndex);
-        }
-        // Додаємо підтримку zoom за допомогою клавіш +/-
-  /*//P.S. Не вийшло реалізувати ) ...в галереї є підртимка zoom
- за допомогою мишки, думав можна отримати доступ
- до zoom, за допомогою zoomIn, zoomOut. не получається ) якщо можна якост реалізувати 
-буду вдячний за підказку 
+  interval = setInterval(() => {
+    const currentDate = new Date();
+    newInterval = userSelectedDate - currentDate;
+    if (newInterval <= 0 && differenceData > 0) {
+      clearInterval(interval);
+      inputData.disabled = false;
+      timer.querySelectorAll('.value, .label').forEach(element => {
+        element.classList.remove('active');
+      });
 
-    } else if (event.key === '+' || event.key === '-') {
-        if (!simpleLightbox.isOpen) {
-            return;
-        } else {
-            if (event.key === '+') {
-                event.preventDefault();
-                simpleLightbox.zoomIn();
-            } else if (event.key === '-') {
-                event.preventDefault();
-                simpleLightbox.zoomOut();
-            }
-        }
-        */
+      iziToast.show({
+        title: 'Warning!',
+        message: 'Час до даної події минув!',
+        titleColor: '#bd34fe',
+        messageColor: '#25acda',
+        position: 'center',
+        backgroundColor: '#d4cec7f3',
+      });
+      return;
     }
+    displayData();
+  }, 1000);
 }
 
+function convertMs(ms) {
+  // Number of milliseconds per unit of time
+  const second = 1000;
+  const minute = second * 60;
+  const hour = minute * 60;
+  const day = hour * 24;
 
-function updateActiveImg() {
-    galleryArray.forEach(item => item.classList.remove("active"));
-    const activeItem = galleryArray[activeIndex];
-    console.log("🚀 ~ activeIndex ~ activeIndex:", activeIndex);
-    console.log("🚀 ~ updateActiveImg ~ activeItem:", activeItem)
+  // Remaining days
+  const days = Math.floor(ms / day);
+  // Remaining hours
+  const hours = Math.floor((ms % day) / hour);
+  // Remaining minutes
+  const minutes = Math.floor(((ms % day) % hour) / minute);
+  // Remaining seconds
+  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
-    activeItem.classList.add("active");
-    const link = activeItem.querySelector('.gallery-link');
-    link.focus();
+  return { days, hours, minutes, seconds };
+}
+
+//console.log(convertMs(2000)); // {days: 0, hours: 0, minutes: 0, seconds: 2}
+//console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
+//console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
+
+function addLeadingZero(value) {
+  return value.toString().padStart(2, '0');
+}
+
+function displayData(value) {
+  timer.querySelectorAll('.value, .label').forEach(element => {
+    element.classList.add('active');
+  });
+  const timeInterval = convertMs(newInterval);
+  day.textContent = addLeadingZero(timeInterval.days);
+  hour.textContent = addLeadingZero(timeInterval.hours);
+  minute.textContent = addLeadingZero(timeInterval.minutes);
+  second.textContent = addLeadingZero(timeInterval.seconds);
 }
