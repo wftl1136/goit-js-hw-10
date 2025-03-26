@@ -1,0 +1,147 @@
+.feedback-form {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 12px;
+  border: 2px solid #bd34fe;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  box-shadow: 2px 2px 4px #41d1ff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.feedback-form label {
+  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-weight: bold;
+  color: #bd34fe;
+}
+
+.container-email {
+  padding-bottom: 20px;
+}
+
+.container-textarea {
+  position: relative;
+  padding-bottom: 40px;
+}
+
+.feedback-form input[type='email'],
+.feedback-form textarea {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid #41d1ff;
+  border-radius: 8px;
+  box-shadow: 2px 2px 4px #bd34fe;
+  outline: none;
+}
+
+.count-number {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 10px;
+  pointer-events: none;
+}
+.feedback-form input[type='email'].valid {
+  outline: rgb(6, 224, 6);
+}
+
+.error-message {
+  display: block;
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  color: #91063b;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.chek {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 45px;
+}
+
+.feedback-form button {
+  display: block;
+  min-width: 100px;
+  max-width: 50%;
+  padding: 14px;
+  color: rgb(0, 0, 0);
+  font-weight: bold;
+  text-shadow: 1px 2px 4px white;
+  background: linear-gradient(130deg, #bd34fe 30%, #41d1ff);
+  border: 1px solid orangered;
+  border-radius: 12px;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.feedback-form button:hover {
+  background: linear-gradient(130deg, #41d1ff 30%, #bd34fe);
+  transform: scale(1.1);
+}
+
+.feedback-form input[type='email']:focus,
+.feedback-form textarea:focus {
+  outline: 2px solid #bd34fe;
+  border: 2px solid #41d1ff;
+}
+
+input[type='email'].error {
+  outline: 2px solid red;
+  border: 2px solid #ff0000;
+}
+
+input[type='email'].error:focus {
+  outline: 2px solid red;
+  border: 2px solid #ff0000;
+}
+
+.count-number {
+  position: absolute;
+  bottom: 23px;
+  right: 4px;
+  font-size: 10px;
+  pointer-events: none;
+  color: #bd34fe;
+}
+
+.message-counter {
+  display: inline-block;
+  position: absolute;
+  bottom: 0px;
+  left: 2px;
+  padding-left: 14x;
+  font-size: 10px;
+  color: #91063b;
+  text-align: left;
+}
+
+.message-counter a {
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media only screen and (min-width: 768px) {
+  .message-counter {
+    left: 14px;
+    font-size: 12px;
+  }
+}
+
+.hidden {
+  display: none;
+}

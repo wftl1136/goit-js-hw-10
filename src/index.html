@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vanilla App Template</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <load src="./partials/header.html" icon-path="img/sprite.svg#logo" />
+
+    <main class="main-centered">
+      <!-- Loads the specified .html file , -->
+      <ul class="ul-menu">
+        <li>
+          <a href="./1-gallery.html" class="link-with-preview">
+            <span class="link-text">Gallery</span>
+            <img
+              src="./img/preview.jpg"
+              alt="Прев’ю Gallery"
+              class="preview-image"
+            />
+          </a>
+        </li>
+        <li>
+          <a href="./2-form.html" class="link-with-preview">
+            <span class="link-text">Form</span>
+            <img
+              src="./img/previewform.jpg"
+              alt="Прев’ю Form"
+              class="preview-image"
+            />
+          </a>
+        </li>
+      </ul>
+    </main>
+
+    <load src="./partials/footer.html" />
+
+    <script type="module" src="./js/2-form.js"></script>
+  </body>
+</html>
